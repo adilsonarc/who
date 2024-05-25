@@ -17,11 +17,16 @@ import java.util.stream.IntStream;
 public class SearchController {
 
     @GetMapping
-    public List<SearchResponseDTO> search(@RequestParam String videoLink) {
+    public List<ProfileDto> search(@RequestParam String videoLink) {
+        try {
+            Thread.sleep(5000L);
+        } catch (InterruptedException e) {
+
+        }
         Faker faker = new Faker(new Locale("PT-PT"));
 
         return IntStream.range(0, 50)
-                .mapToObj(i -> new SearchResponseDTO(
+                .mapToObj(i -> new ProfileDto(
                         faker.name().name(),
                         faker.funnyName().name(),
                         URI.create(faker.internet().url().replace(" ", "")),

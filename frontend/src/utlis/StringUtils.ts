@@ -1,0 +1,1 @@
+export const isNotBlank = (value: string) => value != null && value.trim() !== '';

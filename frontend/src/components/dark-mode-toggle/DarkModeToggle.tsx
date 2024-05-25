@@ -1,16 +1,16 @@
 import {Button, useComputedColorScheme, useMantineColorScheme} from '@mantine/core';
 import {useState} from 'react';
-import MoonIcon from "../moon-icon/MoonIcon";
-import SunIcon from "../sun-icon/SunIcon";
+import {IconMoon, IconSun} from '@tabler/icons-react';
 
 export default function DarkModeToggle() {
     const {setColorScheme} = useMantineColorScheme();
     const computedColorScheme = useComputedColorScheme('light');
-    const [icon, setIcon] = useState(computedColorScheme === 'light' ? <SunIcon/> : <MoonIcon/>);
+    const [icon, setIcon] = useState(<IconMoon/>);
 
     const toggleColorScheme = () => {
-        setColorScheme(computedColorScheme === 'dark' ? 'light' : 'dark');
-        setIcon(computedColorScheme === 'light' ? <MoonIcon/> : <SunIcon/>);
+        const newColorScheme = computedColorScheme === 'dark' ? 'light' : 'dark';
+        setColorScheme(newColorScheme);
+        setIcon(newColorScheme === 'light' ? <IconMoon/> : <IconSun/>);
     };
 
     return (
