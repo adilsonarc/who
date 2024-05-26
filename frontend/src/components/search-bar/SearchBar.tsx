@@ -36,7 +36,6 @@ export default function SearchBar({loading, setLoading, setData, setError}: Sear
             .then(data => setData(data))
             .catch(() => {
                 setError(true);
-                setData(null);
             })
             .finally(() => setLoading(false));
     };
