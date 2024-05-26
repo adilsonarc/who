@@ -1,17 +1,15 @@
 import {Box, Table} from "@mantine/core";
 import SearchResults from "../search-results/SearchResults";
 import TableLoading from "../table-loading/TableLoading";
+import ProfileDto from "../../services/ProfileDto";
 
 interface SearchResultsProps {
     headerHeight: number;
-    searchInput: string;
+    data: ProfileDto[] | null;
     loading: boolean;
-    setLoading: (error: boolean) => void;
-    setError: (error: boolean) => void;
 }
 
-export default function SearchTable({headerHeight, searchInput, loading, setLoading, setError}: SearchResultsProps) {
-    const isNotBlankInput = searchInput != null && searchInput.trim() !== '';
+export default function SearchTable({headerHeight, data, loading}: SearchResultsProps) {
     return (
         <div>
             <Box pos="relative" mt="md">
@@ -26,7 +24,7 @@ export default function SearchTable({headerHeight, searchInput, loading, setLoad
                     </Table.Thead>
                     <Table.Tbody>
                         {loading && <TableLoading/>}
-                        {isNotBlankInput && <SearchResults searchInput={searchInput} setError={setError} setLoading={setLoading}/>}
+                        {data && <SearchResults data={data}/>}
                     </Table.Tbody>
                 </Table>
             </Box>

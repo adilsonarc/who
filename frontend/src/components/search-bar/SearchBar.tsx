@@ -4,17 +4,21 @@ import '@mantine/notifications/styles.css';
 import {useForm} from "@mantine/form";
 import {validateUrl} from "../../utlis/FormValidation";
 import {IconSearch} from "@tabler/icons-react";
+import {fetchData} from "../../utlis/FetchUtils";
+import ProfileDto from "../../services/ProfileDto";
 
 interface SearchBarProps {
-    setSearchInput: (value: string) => void;
     loading: boolean;
+    setLoading: (loading: boolean) => void;
+    setData: (data: ProfileDto[] | null) => void;
+    setError: (error: boolean) => void;
 }
 
 interface FormValues {
     searchBarInput: string;
 }
 
-export default function SearchBar({setSearchInput, loading}: SearchBarProps)  {
+export default function SearchBar({loading, setLoading, setData, setError}: SearchBarProps) {
     const form = useForm<FormValues>({
         mode: 'uncontrolled',
         initialValues: {searchBarInput: ''},
@@ -24,8 +28,18 @@ export default function SearchBar({setSearchInput, loading}: SearchBarProps)  {
     });
 
     const handleSubmit = (formValues: FormValues) => {
-        setSearchInput(formValues.searchBarInput);
-    }
+        const searchInput = formValues.searchBarInput;
+        setLoading(true);
+        setError(false);
+        setData(null);
+        fetchData(`http://localhost:8080/api/v1/search?videoLink=${encodeURIComponent(searchInput)}`)
+            .then(data => setData(data))
+            .catch(() => {
+                setError(true);
+                setData(null);
+            })
+            .finally(() => setLoading(false));
+    };
 
     return (
         <Box maw={340} mx="auto">

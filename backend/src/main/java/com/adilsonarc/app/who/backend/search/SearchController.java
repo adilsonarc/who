@@ -26,9 +26,11 @@ public class SearchController {
         } catch (InterruptedException e) {
 
         }
-        response.setStatus(501);
-        return List.of();
-        /*
+        if (videoLink.contains("error")) {
+            response.setStatus(400);
+            return List.of();
+        }
+
         Faker faker = new Faker(new Locale("PT-PT"));
 
         return IntStream.range(0, 50)
@@ -39,7 +41,5 @@ public class SearchController {
                         Duration.ofHours(faker.number().numberBetween(0, 100))
                                 .withSeconds(faker.number().numberBetween(1, 59))))
                 .toList();
-         */
-
     }
 }

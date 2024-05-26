@@ -1,7 +1,11 @@
-export const validateUrl = (url: string): string | undefined => {
+export const validateUrl = (urlString: string): string | undefined => {
+    const errorMessage = 'Invalid URL';
     try {
-        new URL(url);
+        const url = new URL(urlString);
+        if (url.hostname !== 'www.youtube.com' || !url.search.startsWith('?v=')) {
+            return errorMessage;
+        }
     } catch (error) {
-        return 'Invalid URL';
+        return errorMessage;
     }
 };
