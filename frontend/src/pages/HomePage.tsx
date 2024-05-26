@@ -1,6 +1,7 @@
 import {useState} from "react";
 import SearchBar from "../components/search-bar/SearchBar";
 import SearchTable from "../components/search-table/SearchTable";
+import ErrorNotification from "../components/error-notification/ErrorNotification";
 
 interface HomePageProps {
     headerHeight: number;
@@ -8,15 +9,14 @@ interface HomePageProps {
 
 export default function HomePage({headerHeight}: HomePageProps) {
     const [searchInput, setSearchInput] = useState('');
-
-    function handleSearchInputChange(value: string) {
-        setSearchInput(value);
-    }
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
 
     return (
         <>
-            <SearchBar handleSearchInputChange={handleSearchInputChange}/>
-            <SearchTable headerHeight={headerHeight} searchInput={searchInput}/>
+            <SearchBar setSearchInput={setSearchInput} loading={loading}/>
+            <SearchTable headerHeight={headerHeight} searchInput={searchInput} setError={setError} loading={loading} setLoading={setLoading}/>
+            {error && <ErrorNotification/>}
         </>
     );
 }

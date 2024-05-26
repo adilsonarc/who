@@ -1,46 +1,42 @@
 import {Table} from "@mantine/core";
-import TableLoading from "../table-loading/TableLoading";
 import ProfileDto from "../../services/ProfileDto";
 import {formatTime} from "../../utlis/FormatTime";
-import {notifications} from "@mantine/notifications";
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
+import {fetchData} from "../../utlis/FetchUtils";
 
 interface SearchResultsProps {
     searchInput: string;
+    setLoading: (error: boolean) => void;
+    setError: (error: boolean) => void;
 }
 
-export default function SearchResults({searchInput}: SearchResultsProps) {
-    const [loading, setLoading] = useState(false);
+export default function SearchResults({searchInput, setLoading, setError}: SearchResultsProps) {
     const [data, setData] = useState<ProfileDto[] | null>(null);
-    const [error, setError] = useState(false);
 
     useEffect(() => {
         setLoading(true);
-        setData([]);
         setError(false);
-        fetch(`http://localhost:8080/api/v1/search?videoLink=${encodeURIComponent(searchInput)}`)
-            .then(response => response.json()
-                .then(data => setData(data)))
-            .catch(() => setError(true))
+        fetchData(`http://localhost:8080/api/v1/search?videoLink=${encodeURIComponent(searchInput)}`)
+            .then(data => setData(data))
+            .catch(() => {
+                setError(true);
+                setData([]);
+            })
             .finally(() => setLoading(false));
-    }, [searchInput]);
+    }, [searchInput, setLoading, setData, setError]);
 
-    if (error) {
-        notifications.show({
-            title: 'Error',
-            message: 'Something when wrong!',
-        });
-    }
+    const transformedData = useMemo(() => {
+        return data?.map((profile): ProfileDto => ({
+            ...profile,
+            key: crypto.randomUUID(),
+            timestamp: formatTime(profile.timestamp)
+        }));
+    }, [data]);
 
     return (
         <>
-            {loading && <TableLoading/>}
-            {data && (
-                data.map((profile): ProfileDto => ({
-                    ...profile,
-                    key: crypto.randomUUID(),
-                    timestamp: formatTime(profile.timestamp)
-                })).map((profile) =>
+            {transformedData &&
+                transformedData.map((profile) =>
                     <Table.Tr key={profile.key}>
                         <Table.Td>{profile.name}</Table.Td>
                         <Table.Td>{profile.profile}</Table.Td>
@@ -48,7 +44,7 @@ export default function SearchResults({searchInput}: SearchResultsProps) {
                         <Table.Td>{profile.link}</Table.Td>
                     </Table.Tr>
                 )
-            )}
+            }
         </>
     );
 }

@@ -5,7 +5,7 @@ export default function ErrorNotification() {
     const xIcon = <IconX style={{width: rem(20), height: rem(20)}}/>;
 
     return (
-        <Notification icon={xIcon} color="red" title="Bummer!">
+        <Notification icon={xIcon} color="red" title="Bummer!" withCloseButton={false}>
             Something went wrong
         </Notification>
     );

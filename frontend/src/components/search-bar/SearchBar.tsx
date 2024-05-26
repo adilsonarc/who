@@ -6,14 +6,15 @@ import {validateUrl} from "../../utlis/FormValidation";
 import {IconSearch} from "@tabler/icons-react";
 
 interface SearchBarProps {
-    handleSearchInputChange: (value: string) => void;
+    setSearchInput: (value: string) => void;
+    loading: boolean;
 }
 
 interface FormValues {
     searchBarInput: string;
 }
 
-export default function SearchBar({handleSearchInputChange}: SearchBarProps): React.ReactElement {
+export default function SearchBar({setSearchInput, loading}: SearchBarProps)  {
     const form = useForm<FormValues>({
         mode: 'uncontrolled',
         initialValues: {searchBarInput: ''},
@@ -23,13 +24,14 @@ export default function SearchBar({handleSearchInputChange}: SearchBarProps): Re
     });
 
     const handleSubmit = (formValues: FormValues) => {
-        handleSearchInputChange(formValues.searchBarInput);
+        setSearchInput(formValues.searchBarInput);
     }
 
     return (
         <Box maw={340} mx="auto">
             <form onSubmit={form.onSubmit(handleSubmit)}>
                 <TextInput
+                    disabled={loading}
                     placeholder="Youtube video link"
                     mb="md"
                     leftSection={<IconSearch style={{width: rem(16), height: rem(16)}} stroke={1.5}/>}

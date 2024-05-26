@@ -1,14 +1,17 @@
 import {Box, Table} from "@mantine/core";
 import SearchResults from "../search-results/SearchResults";
-import {isNotBlank} from "../../utlis/StringUtils";
+import TableLoading from "../table-loading/TableLoading";
 
 interface SearchResultsProps {
     headerHeight: number;
     searchInput: string;
+    loading: boolean;
+    setLoading: (error: boolean) => void;
+    setError: (error: boolean) => void;
 }
 
-export default function SearchTable({headerHeight, searchInput}: SearchResultsProps) {
-    const content = isNotBlank(searchInput) ? <SearchResults searchInput={searchInput}/> : <></>
+export default function SearchTable({headerHeight, searchInput, loading, setLoading, setError}: SearchResultsProps) {
+    const isNotBlankInput = searchInput != null && searchInput.trim() !== '';
     return (
         <div>
             <Box pos="relative" mt="md">
@@ -22,7 +25,8 @@ export default function SearchTable({headerHeight, searchInput}: SearchResultsPr
                         </Table.Tr>
                     </Table.Thead>
                     <Table.Tbody>
-                        {content}
+                        {loading && <TableLoading/>}
+                        {isNotBlankInput && <SearchResults searchInput={searchInput} setError={setError} setLoading={setLoading}/>}
                     </Table.Tbody>
                 </Table>
             </Box>
